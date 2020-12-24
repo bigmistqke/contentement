@@ -33,3 +33,4 @@ Thumbs.db
 
 LoginDetails.js
 builds
+*.bundle.js*
