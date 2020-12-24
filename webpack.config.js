@@ -1,11 +1,12 @@
 const path = require('path');
+// import path from 'path';
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     mode: 'development',
     entry: {
-        app: './app/index.js'
+        app: './src/index.js'
     },
     output: {
         filename: 'app.bundle.js',
@@ -27,12 +28,11 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            template: './app/index.ejs'
+            template: './src/index.ejs'
         }),
         new CopyWebpackPlugin({
             patterns: [
-                { from: './app/favicon.ico' },
-                { from: './app/assets', to: 'assets' }
+                { from: './favicon.png' }
             ],
         })
     ],

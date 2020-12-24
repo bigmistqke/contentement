@@ -1,26 +1,28 @@
 {
-  "name": "electron-quick-start",
+  "name": "post-neon-cms",
   "version": "1.0.0",
-  "description": "A minimal Electron application",
+  "private": false,
+  "description": "custom cms for post-neon.com",
   "main": "electron.js",
   "scripts": {
     "start": "electron .",
     "dev": "concurrently \"webpack --watch\" \"electron .\"",
-    "build": "rimraf ./public && mkdir public && webpack --progress -p"
+    "build": "rimraf ./public && mkdir public && webpack --progress -p",
+    "pack:win32": "electron-packager . --overwrite post-neon-cms --icon=favicon.ico"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
+    "post",
+    "neon",
+    "custom",
+    "cms"
   ],
   "author": "GitHub",
   "license": "CC0-1.0",
   "devDependencies": {
     "@babel/core": "7.12.9",
     "@babel/plugin-proposal-class-properties": "7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "7.12.7",
     "@babel/preset-react": "7.12.7",
     "babel-loader": "8.2.1",
@@ -45,15 +47,31 @@
     "webpack-cli": "3.3.12"
   },
   "dependencies": {
-    "body-parser": "1.19.0",
-    "express": "4.17.1",
-    "morgan": "^1.10.0",
     "axios": "^0.21.0",
+    "babel-node": "0.0.1-security",
+    "body-parser": "1.19.0",
+    "child_process": "^1.0.2",
     "classnames": "2.2.6",
+    "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "8.2.0",
+    "electron-is-dev": "^1.1.0",
+    "express": "4.17.1",
+    "ffmpeg-static": "^4.2.7",
+    "morgan": "^1.10.0",
+    "node-fetch": "^2.6.1",
+    "nodemon": "^1.19.1",
+    "piping": "^1.0.0-rc.4",
+    "progress-stream": "^2.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-router-dom": "5.2.0"
+    "react-router-dom": "5.2.0",
+    "serve-favicon": "^2.5.0",
+    "sharp": "^0.26.3",
+    "ssh2-sftp-client": "^5.3.2",
+    "uniqid": "^5.2.0",
+    "url": "^0.11.0",
+    "web-vitals": "^0.2.4"
   },
   "babel": {
     "presets": [
@@ -66,7 +84,13 @@
       "@babel/preset-react"
     ],
     "plugins": [
-      "@babel/plugin-proposal-class-properties"
+      "@babel/plugin-proposal-class-properties",
+      [
+        "@babel/transform-runtime",
+        {
+          "regenerator": true
+        }
+      ]
     ]
   },
   "postcss": {

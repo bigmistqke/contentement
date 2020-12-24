@@ -1,0 +1,232 @@
+body{
+    margin:0px;
+    padding:0px;
+}
+
+.App{
+    height:100vh;
+    width:100vw;
+}
+
+.project{
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    flex-direction: column;
+    border-bottom:1px solid black;
+}
+.hidden{
+    display: none;
+}
+*{
+    outline:none;
+    border:none;
+    box-sizing: border-box;
+}
+.overlay header{
+    display: inline-block;
+}
+header{
+    display: flex;
+    border-bottom:1px solid black;
+    min-height:32pt;
+}
+header button:hover{
+    border:1px solid black;
+}
+
+header button,
+footer button{
+    position: relative;
+    border-radius: 50px;
+    margin: 8px;
+    border:1px solid lightgrey;
+    overflow: hidden;
+}
+.deleting {
+    background:black;
+}
+.deleting .medias,
+.deleting header{
+    opacity: 0;
+}
+.project .title{
+    padding-left:20px;
+}
+.grey{
+    color:lightgrey;
+}
+.title{
+    flex:1;
+    font-size: 18pt;
+    line-height: 32pt;
+    padding-left:10px;
+}
+.medias{
+    flex: 1;
+    overflow-y: hidden;
+    overflow-x: auto;
+    padding-bottom:40px;
+    min-height: 350px;
+    /* height:314px; */
+}
+.medias > div{
+    vertical-align: top;
+}
+.media:first-child{
+    margin-left:20px;
+}
+.media{
+    display: inline-block;
+    position: relative;
+    padding: 20px;
+    margin-top: 20px;  
+    cursor:move;  
+}
+.media > img, .media > video{
+    height: 250px;
+    object-fit: fill;
+}
+.media:hover button{
+    visibility: visible;
+}
+.media button{
+    position: absolute;
+    top:0px;
+    left:0px;
+    margin:20px;
+    height:20px;
+    line-height:20px;
+    z-index:1;
+    background:black;
+    color:white;
+    visibility: hidden;
+}
+.flex{
+    display: flex;
+    flex-direction: column;
+}
+
+.flexing{
+    flex:1;
+}
+
+.scroll{
+    overflow-y:auto
+}
+
+button{
+    cursor: pointer;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+button:hover{
+    background:white;
+    color: black;
+}
+
+.progress > div {
+    background:black;
+    color:white;
+    /* width:250px; */
+    height: 250px;
+    position: relative;
+}
+
+.center{
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+}
+.newOverlay {
+    width:75vw;
+    max-width:750px;
+    border:1px solid black;
+}
+.newOverlay > *{
+    width:100%;
+}
+.overlay input, 
+.overlay header{
+    padding-left: 40px;
+    min-height: 64pt;
+    line-height: 64pt;
+    font-size: 32pt;
+    border-bottom:1px solid black;
+}
+
+.newOverlay .button-container{
+    height:32pt;
+    position: relative;
+}
+.newOverlay button{
+    width:50%;
+    height:100%;
+    vertical-align: top;
+}
+.newOverlay button:not(:first-child){
+    border-left:1px solid black;
+}
+.infoOverlay{
+    width: 75vw;
+    height:75vh;
+    background:white;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+}
+.infoOverlay > *:not(:last-child){
+    border-bottom: 1px solid black;
+}
+.infoOverlay textarea{
+    resize:none;
+}
+.infoOverlay > * {
+    padding: 10px;
+}
+.infoOverlay .big{
+    flex: 1;
+}
+.infoOverlay .small{
+    flex: 0.5;
+}
+.overlay-container{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    position: absolute;
+    z-index: 3;
+    cursor: pointer;
+}
+.overlay{
+    background:white;
+}
+
+.progress__text{
+    padding: 50px;
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+}
+footer{
+    background:lightgrey;
+    white-space: nowrap;
+    overflow:hidden;
+    padding-left:20px;
+}
+footer button{
+    background:white !important;
+}
+
+footer .prog{
+    position: absolute;
+    width:100%;
+    height:100%;
+    transform-origin:left center;
+    top:0px;
+    left:0px;
+    background:white;
+    mix-blend-mode: difference;
+    z-index: 1;
+}
