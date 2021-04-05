@@ -1,5 +1,6 @@
 const electron = require('electron');
 const server = require('./server/server.js');
+require('update-electron-app')()
 
 const app = electron.app;
 const protocol = electron.protocol
@@ -13,6 +14,13 @@ function init() {
     createProtocol();
     createWindow();
 }
+
+app.whenReady().then(() => {
+    protocol.registerFileProtocol('file', (request, callback) => {
+        const pathname = decodeURI(request.url.replace('file:///', ''));
+        callback(pathname);
+    });
+});
 
 function createProtocol() {
     const protocolName = 'safe'
@@ -34,6 +42,8 @@ function createWindow() {
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, 'preload.js'),
+            nodeIntegrationInWorker: true,
+            webSecurity: false,
         },
         icon: __dirname + '/favicon.ico'
     });

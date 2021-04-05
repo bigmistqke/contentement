@@ -28,15 +28,36 @@ function App() {
     return _data;
   }
 
+  const optimizeData = (data) => {
+    data.projects.forEach(project => {
+      project.medias.forEach(media => {
+        // optimizeMedia(project, media)
+        console.log(project);
+        let type = media.type.charAt(0).toUpperCase() + media.type.slice(1);
+        let addMp4 = type === 'video' && !media.src.includes('mp4') ? true : false;
+        console.log(media.src, addMp4);
+        media.src += addMp4 ? ".mp4" : '';
+        let file = {
+          path: `C:/wamp64/www/postneon.com/projects/${project.title}/${type}/desktop/${media.src}`,
+          type: `${media.type}`
+        }
+        console.log(file.path);
+        r_mediaProcessor.current.queueMedia(file, project.title, media.src);
+        // r_mediaProcessor.current.optimize()
+      })
+    })
+  }
+
   useEffect(() => {
     r_mediaProcessor.current = new MediaProcessor(updateMedia, saveData);
 
     fetch("http://localhost:9002/fetch")
       .then(res => { return res.json() })
       .then(res => {
-        //console.log.log(res);
+        console.log(res);
         let clean = cleanData(res);
         r_data.current = clean;
+        // optimizeData(clean);
         setData(clean);
       });
   }, []);
@@ -58,7 +79,7 @@ function App() {
       cleanedProject.directory = encodeURI(_project_name);
       cleanedProject.medias = [];
 
-      //console.log.log(cleanedProject);
+      //console.log(cleanedProject);
 
       _project.children.forEach((_media, i) => {
         let cleanedMedia = {};
@@ -157,7 +178,8 @@ function App() {
         'Content-type': 'application/json; charset=UTF-8'
       }
     }).then((res) => {
-      let _data = JSON.parse(JSON.stringify(data));
+      console.log(res);
+      let _data = { ...r_data.current };
       _data.projects = _data.projects.filter(p => p.title !== project_name);
       updateData(_data);
     })
@@ -218,7 +240,7 @@ function App() {
               openInfo={() => { openInfo(v, 'info', v.title) }}
               setData={setData}
               updateData={updateData}
-              key={i}
+              key={v.title}
               title={v.title}
               medias={v.medias}
               directory={v.directory}

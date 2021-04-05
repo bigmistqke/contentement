@@ -11,7 +11,7 @@ const ProgressFooter = (props) => {
             props.projects.forEach(p => p.medias.forEach(m => {
                 if (!m.progress || m.progress === '') return;
                 let state;
-                console.log(m.progress);
+                //console.log(m.progress);
                 let que = m.progress.includes('queue');
                 let opt = m.progress.includes('optim');
                 let des = m.progress.includes('desktop');

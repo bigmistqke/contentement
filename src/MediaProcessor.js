@@ -4,14 +4,14 @@ import uniqid from 'uniqid';
 export default class MediaProcessor {
 
     getDimensions = (file, type) => {
-        console.log(file);
+        //console.log(file);
         return new Promise((resolve) => {
             switch (type) {
                 case 'video':
                     let video = document.createElement("video");
                     video.src = `safe://${file.path}`;
                     video.addEventListener("loadedmetadata", function (e) {
-                        console.log({ x: this.videoWidth, y: this.videoHeight });
+                        //console.log({ x: this.videoWidth, y: this.videoHeight });
                         resolve({ x: this.videoWidth, y: this.videoHeight });
                     }, false);
                     break;
@@ -36,8 +36,8 @@ export default class MediaProcessor {
     }
 
     pingProgress = (media, format, duration, resolve) => {
-        console.log("FEEEEEEEEETCH");
-        //console.log("PING!", media, format, resolve);
+        //console.log("FEEEEEEEEETCH");
+        ////console.log("PING!", media, format, resolve);
         fetch("http://localhost:9002/progressResize", {
             method: "POST",
             body: JSON.stringify(media),
@@ -47,14 +47,14 @@ export default class MediaProcessor {
         }).then(res => {
             return res.json();
         }).then(progress => {
-            //console.log(progress);
+            ////console.log(progress);
             let percentage = progress.time / duration;
             percentage = Math.round(percentage * 100) / 100;
             let p_text = `optimizing ${format}: ${percentage} %`;
             this.updateProgress(media, p_text);
 
             if (progress.status === 'end') {
-                //console.log("END!");
+                ////console.log("END!");
                 resolve();
             } else {
                 setTimeout(() => {
@@ -85,7 +85,7 @@ export default class MediaProcessor {
 
     progressResize = (media, format) => {
         const pingResize = (media, format, duration, resolve) => {
-            console.log("PING!", media, format, resolve);
+            //console.log("PING!", media, format, resolve);
             fetch("http://localhost:9002/progressResize", {
                 method: "POST",
                 body: JSON.stringify(media),
@@ -95,7 +95,7 @@ export default class MediaProcessor {
             }).then(res => {
                 return res.json();
             }).then(progress => {
-                //console.log(progress);
+                ////console.log(progress);
                 let percentage = progress.time / duration;
                 percentage = Math.round(percentage * 100) / 100;
                 percentage = percentage ? percentage : 0;
@@ -103,7 +103,7 @@ export default class MediaProcessor {
                 this.updateProgress(media, p_text);
 
                 if (progress.status === 'end') {
-                    //console.log("END!");
+                    ////console.log("END!");
                     resolve();
                 } else {
                     setTimeout(() => {
@@ -114,7 +114,7 @@ export default class MediaProcessor {
         }
         return new Promise((resolve) => {
             this.getDuration(media.path).then(duration => {
-                console.log('RESIZE!!', media, format, duration);
+                //console.log('RESIZE!!', media, format, duration);
                 setTimeout(() => {
                     pingResize(media, format, duration, resolve);
                 }, 1000);
@@ -124,7 +124,7 @@ export default class MediaProcessor {
 
     resizeMedia = (media, format) => {
         return new Promise((resolve) => {
-            //console.log('resize', media, format);
+            ////console.log('resize', media, format);
             let resize_data = {
                 path: media.path,
                 src: media.src,
@@ -149,6 +149,8 @@ export default class MediaProcessor {
     }
 
 
+
+
     progressUpload = (media) => {
         let pingUpload = (media, resolve) => {
             fetch("http://localhost:9002/progressUpload", {
@@ -160,13 +162,13 @@ export default class MediaProcessor {
             }).then(res => {
                 return res.json();
             }).then(progress => {
-                //console.log(progress);
+                ////console.log(progress);
                 let format = progress.format ? progress.format : 'desktop';
                 let percent = progress.percent ? progress.percent : 0;
                 let p_text = `uploading ${format}: ${percent} %`;
                 this.updateProgress(media, p_text);
                 if (progress.status === 'end' && progress.format === 'mobile') {
-                    console.log("END!");
+                    //console.log("END!");
                     resolve();
                 } else {
                     setTimeout(() => {
@@ -189,13 +191,13 @@ export default class MediaProcessor {
         return new Promise(
             (resolve) => {
                 this.updateProgress(media, "uploading to server");
-                console.log(media.type);
+                //console.log(media.type);
                 if (media.type === 'video') {
                     this.progressUpload(media).then(() => {
                         this.updateProgress(media, false);
                     })
                 }
-                console.log('this happens?');
+                //console.log('this happens?');
                 fetch("http://localhost:9002/upload", {
                     method: "POST",
                     body: JSON.stringify(media),
@@ -205,11 +207,11 @@ export default class MediaProcessor {
                 }).then(res => {
                     return res.json()
                 }).then(res => {
-                    console.log("UPLOADING DOENSIES!");
+                    //console.log("UPLOADING DOENSIES!");
                     resolve(res);
                 }).catch(err => {
 
-                    console.log(err);
+                    //console.log(err);
                     resolve(err)
                 })
             }
@@ -217,9 +219,9 @@ export default class MediaProcessor {
     }
 
     updateProgress = (media, p_text) => {
-        //console.log(media, p_text);
+        ////console.log(media, p_text);
         let project = media.project;
-        console.log("UPDATE PROGRESS", media, p_text);
+        //console.log("UPDATE PROGRESS", media, p_text);
         if (p_text) {
             media.progress = p_text;
         } else {
@@ -238,35 +240,77 @@ export default class MediaProcessor {
         this.processing = true;
         let media = this.queue[0];
         await this.resizeMedia(media, 'desktop');
-        console.log("PROCESS", media);
+        //console.log("PROCESS", media);
         if (media.type === 'video') await this.progressResize(media, 'desktop');
         await this.resizeMedia(media, 'mobile');
         if (media.type === 'video') await this.progressResize(media, 'mobile');
         let uploaded = await this.uploadMedia(media);
-        console.log("UPLAODED IS", uploaded);
+        //console.log("UPLAODED IS", uploaded);
         if (uploaded.sucess)
             this.updateProgress(media, false)
         else {
-            console.log("ERRRRRRRRR", uploaded.error);
+            //console.log("ERRRRRRRRR", uploaded.error);
             this.updateProgress(media, `error while uploading: ${JSON.stringify(uploaded.error)}`)
 
         }
         this.queue.shift();
-        this.saveData();
+        // this.saveData();
         this.queue.length === 0 ? this.processing = false : this.processQueue();
     }
 
-    queueMedia = async (file, project_name) => {
+    loadImage = (path) => {
+        return new Promise(resolve => {
+            var img = new Image();
+            img.onload = function () {
+
+                resolve(img);
+            }
+            img.src = path;
+        })
+
+    }
+
+    hasTransparency = async (file) => {
+        let canvas = this.canvas.dom;
+        let ctx = this.canvas.ctx;
+
+        let img = await this.loadImage(file.path);
+        ctx.drawImage(img, 0, 0, 100, 100);
+
+        let data = ctx.getImageData(0, 0, canvas.width, canvas.height).data,
+            hasAlphaPixels = false;
+        for (var i = 3, n = data.length; i < n; i += 4) {
+            if (data[i] < 255) {
+                hasAlphaPixels = true;
+                break;
+            }
+        }
+
+        //console.log("TRANSPARENCY ISSSSSSSSSS ", hasAlphaPixels)
+        return hasAlphaPixels;
+    }
+
+    queueMedia = async (file, project_name, src) => {
+        //console.log("QQ")
         let type = this.getType(file);
+        let transparency = false;
+        if (type === 'image') {
+            transparency = await this.hasTransparency(file);
+        }
+        console.log(type)
+
         let dimensions = await this.getDimensions(file, type);
         let media = {
             path: file.path.replace('file', 'safe'),
-            src: type === 'image' ? `${uniqid()}.png` : `${uniqid()}.mp4`,
+            src: src ? src : type === 'image' ? transparency ? `${uniqid()}.png` : `${uniqid()}.jpg` : `${uniqid()}`,
             type: type,
+            transparency: transparency,
             dimensions: dimensions,
             ratio: dimensions.x / dimensions.y,
             project: project_name,
         }
+        console.log(media)
+
         this.updateProgress(media, 'media added to queue');
         this.queue.push(media);
         if (!this.processing) this.processQueue();
@@ -278,6 +322,10 @@ export default class MediaProcessor {
         this.updateData = updateData;
         this.saveData = saveData;
         this.processing = false;
-
+        this.canvas = {}
+        this.canvas.dom = document.createElement('canvas');
+        this.canvas.ctx = this.canvas.dom.getContext('2d');
+        this.canvas.dom.width = 100;
+        this.canvas.dom.height = 100;
     }
 }

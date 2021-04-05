@@ -28,19 +28,22 @@ class SFTPManager {
             case 'mkdir':
                 return await this.sftp.mkdir(action.remote);
             case 'rmdir':
-                return await this.sftp.rmdir(action.remote);
+                return await this.sftp.rmdir(action.remote, true);
             default:
                 break;
         }
     }
 
     async processQueue() {
-        console.log(this.queue.length, this.connected);
-
-        await this.sftp.connect(this.login);
-
+        // console.log(this.queue.length, this.connected);
+        let c = false;
+        try { c = await this.sftp.connect(this.login) }
+        catch (err) {
+            console.log(err);
+        };
+        // console.log('connection ', c);
         let a = this.queue.shift();
-        console.log(a.action.type, a.action.remote);
+        // console.log(a.action.type, a.action.remote);
         try {
             await this.processAction(a.action);
         } catch (e) {
@@ -49,7 +52,7 @@ class SFTPManager {
         a.resolve();
 
 
-        console.log(this.queue);
+        // console.log(this.queue);
         this.sftp.end()
 
         if (this.queue.length !== 0)

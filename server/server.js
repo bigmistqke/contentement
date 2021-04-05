@@ -51,7 +51,8 @@ Api.get("/", (req, res) => {
 })
 
 Api.get('/fetch', (req, res) => {
-    fetch('http://www.post-neon.com/JSON/data.json')
+    console.log(`${_sftp.base}/JSON/data.json`);
+    fetch(`${_sftp.base}/JSON/data.json`)
         .then(res => { return res.json() })
         .then((json) => {
             res.send(json);
@@ -134,6 +135,7 @@ const uploadMedia = async (_media, format) => {
     let local_path = join(__dirname, 'temp', format, _media.src);
 
     let remote_path = `${_sftp.root}/projects/${_media.project}/${capitalize(_media.type)}/${format}/${_media.src}`;
+    // console.log(_sftp.root, remote_path);
     let basename = path.parse(_media.src).name;
     var filesize = fs.statSync(local_path).size;
     try {
@@ -207,11 +209,14 @@ Api.post('/addProject', (req, res) => {
 Api.post('/deleteProject', (req, res) => {
     let _project = req.body.project;
     let _base = `${_sftp.root}/projects/${_project}`;
-    sftpManager.add({ type: 'rmdir', remote: _base }).then(() => {
-        res.send('project deleted');
-    }).catch(() => {
-        res.sendStatus(404);
-    })
+    sftpManager.add({ type: 'rmdir', remote: _base })
+        .then(() => {
+            console.log('delete ')
+            res.send('project deleted');
+        }).catch((e) => {
+            console.log("ERRRORRR", e)
+            res.send(e);
+        })
 })
 
 

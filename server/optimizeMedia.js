@@ -12,7 +12,6 @@ let path = require('path');
 let join = path.join;
 
 
-
 const delay = time => new Promise(res => setTimeout(res, time));
 
 
@@ -50,6 +49,8 @@ const optimizeVideo = (_src, _path, _dim, _format) => {
         '-vf', `scale=${newDim.x}:${newDim.y}`,
         '-codec:a', 'libmp3lame',
         '-c:v', 'libx264',
+        'fps=fps=30',
+        '-movflags', '+faststart',
         dist_path,
         `-progress`, progress_path,
     ]
@@ -81,13 +82,14 @@ const optimizeMedia = (data) => {
         let dimensions = data.dimensions;
         let src = data.src;
         let format = data.format;
+        let transparency = data.transparency;
 
         if (type === 'video') {
             optimizeVideo(src, path, dimensions, format);
             resolve();
         }
         if (type === 'image') {
-            optimizeImage(src, path, dimensions, format)
+            optimizeImage(src, path, dimensions, format, transparency)
                 .then(() => {
                     resolve();
                 })
