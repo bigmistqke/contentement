@@ -11,7 +11,10 @@
     "build": "rimraf ./public && mkdir public && webpack --progress -p",
     "pack": "electron-packager . --overwrite post-neon-cms --icon=favicon.ico"
   },
-  "repository": "https://github.com/vincentvandijck/custom-cms",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vincentvandijck/custom-cms.git"
+  },
   "keywords": [
     "post",
     "neon",
