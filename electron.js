@@ -1,6 +1,10 @@
 const electron = require('electron');
 const server = require('./server/server.js');
-require('update-electron-app')()
+require('update-electron-app')({
+    repo: 'github-user/repo',
+    updateInterval: '5 minutes',
+    logger: require('electron-log')
+})
 
 const app = electron.app;
 const protocol = electron.protocol
