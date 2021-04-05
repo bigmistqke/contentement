@@ -1,6 +1,6 @@
 const electron = require('electron');
 const server = require('./server/server.js');
-// require('update-electron-app')()
+require('update-electron-app')()
 
 const app = electron.app;
 const protocol = electron.protocol
