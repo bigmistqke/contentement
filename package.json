@@ -1,6 +1,6 @@
 {
   "name": "post-neon-cms",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "description": "custom cms for post-neon.com",
   "main": "electron.js",
