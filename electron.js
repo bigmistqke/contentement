@@ -1,7 +1,7 @@
 const electron = require('electron');
 const server = require('./server/server.js');
 require('update-electron-app')({
-    repo: 'github-user/repo',
+    repo: 'vincentvandijck/custom-cms',
     updateInterval: '5 minutes',
     logger: require('electron-log')
 })
